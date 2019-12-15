@@ -3,6 +3,7 @@ const gameNode = require("../../Common/GameNode");
 const { randomColor } = require("../../Common/Colors");
 const Ship = require("./ship-node");
 const WebSocket = require("ws");
+const generateId = require("./id-generator");
 //KozzDevGame works a lot differently than most Home Games.
 // First we pick a host then that most handles the game state.
 // We then broadcast that game state to all other clients.
@@ -31,15 +32,19 @@ class KozzDevGame extends Game {
 
         this.ships[player.id] = new Ship(player.id);
 
+        const gameObjectId = generateId();
+
         const connectMessage = {
             type: "initialize",
             id: player.id,
-            isHost: this.hostId === player.id
+            isHost: this.hostId === player.id,
+            gameObjectId
         };
 
         const newPlayerMessage = JSON.stringify({
             type: "newPlayer",
-            id: player.id
+            id: player.id,
+            gameObjectId
         });
 
         Object.values(this.players).forEach((otherPlayer)=>{
@@ -51,8 +56,6 @@ class KozzDevGame extends Game {
 
     handleInput(update, player) {
 
-        console.log(update)
-
         if(!update.type) {
             console.log("No type in update:" + update);
         }
@@ -60,10 +63,6 @@ class KozzDevGame extends Game {
         if(update.type === 'input' && this.hostId) {
 
             const host = this.players[this.hostId];
-
-            console.log('got input');
-
-            console.log(update);
 
             host.ws.send(JSON.stringify(update));
 
@@ -74,9 +73,6 @@ class KozzDevGame extends Game {
     handlePlayerUpdate(update, player) {
         const parsedUpdate = JSON.parse(update);
 
-        console.log('player update')
-        console.log(update)
-
         if(!parsedUpdate.type) {
             console.log("No type in update:" + update);
         }
@@ -84,8 +80,6 @@ class KozzDevGame extends Game {
         if(parsedUpdate.type === 'uinput' && this.hostId) {
 
             const host = this.players[this.hostId];
-
-            console.log('got input');
 
             console.log(update);
 
