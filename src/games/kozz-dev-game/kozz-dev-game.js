@@ -3,13 +3,12 @@ const gameNode = require("../../Common/GameNode");
 const { randomColor } = require("../../Common/Colors");
 const Ship = require("./ship-node");
 const WebSocket = require("ws");
-
-
 //KozzDevGame works a lot differently than most Home Games.
 // First we pick a host then that most handles the game state.
 // We then broadcast that game state to all other clients.
 // The other clients will send the server inputs which the host will handle.
 class KozzDevGame extends Game {
+
     constructor() {
         super(gameNode('null', null, {"x": 0, "y": 0}, {"x": 100, "y": 100}));
 
@@ -30,14 +29,19 @@ class KozzDevGame extends Game {
         //Player input override. Kinda weird, but didnt want to change the way player worked in Josephs code.
         player.receiveUpdate = (update) => this.handlePlayerUpdate(update, player);
         this.ships[player.id] = new Ship(player.id);
+
+        const connectMessage = {
+            type: "initialize",
+            id: player.id
+        };
+
+        player.ws.send(JSON.stringify(connectMessage));
     }
 
     handlePlayerUpdate(update, player) {
-
         if (player.id === this.hostId) {
             this.gameState = update;
         }
-
     }
 
 
@@ -46,7 +50,7 @@ class KozzDevGame extends Game {
     }
 
     tick() {
-        this.sendHostsGameState();
+        // this.sendHostsGameState();
     }
 
     sendHostsGameState() {
@@ -72,8 +76,7 @@ class KozzDevGame extends Game {
 
         const shipStateObject = {};
 
-        Object.keys(this.ships).forEach((shipKey)=>{
-
+        Object.keys(this.ships).forEach((shipKey) => {
             shipStateObject[shipKey] = this.ships[shipKey].getShipState();
         });
 
@@ -90,8 +93,6 @@ class KozzDevGame extends Game {
             const player = this.players[keys];
 
             if (player.ws && player.ws.readyState === WebSocket.OPEN) {
-
-                console.log(' sending ' + JSON.stringify({shipStates}));
 
                 player.ws.send(JSON.stringify({shipStates}));
 
