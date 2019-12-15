@@ -32,8 +32,18 @@ class KozzDevGame extends Game {
 
         const connectMessage = {
             type: "initialize",
-            id: player.id
+            id: player.id,
+            isHost: this.hostId === player.id
         };
+
+        const newPlayerMessage = JSON.stringify({
+            type: "newPlayer",
+            id: player.id
+        });
+
+        Object.values(this.players).forEach((otherPlayer)=>{
+            otherPlayer.ws.send(newPlayerMessage)
+        });
 
         player.ws.send(JSON.stringify(connectMessage));
     }
