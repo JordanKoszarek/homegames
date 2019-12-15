@@ -11,6 +11,7 @@ const Player = require("./src/Player");
 //const Slaps = require('./src/games/slaps');
 //const NameTest = require('./src/games/name-test');
 //const Menu = require('./src/menu');
+const KozzDevGame = require('./src/games/kozz-dev-game/kozz-dev-game');
 const http = require("http");
 const linkHelper = require("./src/common/util/link-helper");
 
@@ -38,7 +39,7 @@ const generatePlayerId = () => {
     throw new Error("no player IDs left in pool");
 };
 
-const game = new WordMatch();
+const game = new KozzDevGame();
 
 const session = new GameSession(game, {
     "width": 320, 
