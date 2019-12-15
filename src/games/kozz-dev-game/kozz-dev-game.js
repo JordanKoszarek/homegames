@@ -20,38 +20,47 @@ class KozzDevGame extends Game {
     }
 
 
-    handleNewPlayer(player) {
-        super.handleNewPlayer(player);
+    handleNewPlayer(newPlayer) {
+        super.handleNewPlayer(newPlayer);
 
         if (!this.hostId) {
-            this.hostId = player.id;
+            this.hostId = newPlayer.id;
         }
 
         //Player input override. Kinda weird, but didnt want to change the way player worked in Josephs code.
-        player.receiveUpdate = (update) => this.handlePlayerUpdate(update, player);
+        newPlayer.receiveUpdate = (update) => this.handlePlayerUpdate(update, newPlayer);
 
-        this.ships[player.id] = new Ship(player.id);
+        this.ships[newPlayer.id] = new Ship(newPlayer.id);
 
-        const gameObjectId = generateId();
+        //TODO use this
+        // const gameObjectId = generateId();
 
         const connectMessage = {
             type: "initialize",
-            id: player.id,
-            isHost: this.hostId === player.id,
-            gameObjectId
+            id: newPlayer.id,
+            isHost: this.hostId === newPlayer.id,
+            gameObjectId: newPlayer.id
         };
 
         const newPlayerMessage = JSON.stringify({
             type: "newPlayer",
-            id: player.id,
-            gameObjectId
+            id: newPlayer.id,
+            gameObjectId: newPlayer.id
         });
 
-        Object.values(this.players).forEach((otherPlayer)=>{
+        Object.values(this.players).forEach((otherPlayer) => {
+
+            const otherPlayerMessage = JSON.stringify({
+                type: "newPlayer",
+                id: otherPlayer.id,
+                gameObjectId: otherPlayer.id
+            });
+
+            newPlayer.ws.send(JSON.stringify(otherPlayerMessage));
             otherPlayer.ws.send(newPlayerMessage)
         });
 
-        player.ws.send(JSON.stringify(connectMessage));
+        newPlayer.ws.send(JSON.stringify(connectMessage));
     }
 
     handleInput(update, player) {
@@ -68,6 +77,24 @@ class KozzDevGame extends Game {
 
         }
 
+    }
+
+    handleState(update, player) {
+        if(player.id === this.hostId && update.type === 'state') {
+
+            this.broadcast(JSON.stringify(update));
+
+        }
+    }
+
+    broadcast(message) {
+        Object.keys(this.players).forEach((keys) => {
+            const player = this.players[keys];
+
+            if (player.ws && player.ws.readyState === WebSocket.OPEN) {
+                player.ws.send(message);
+            }
+        });
     }
 
     handlePlayerUpdate(update, player) {
