@@ -171,6 +171,10 @@ class Squisher {
             this.game.handleKeyDown && this.game.handleKeyDown(player, input.key);
         } else if (input.type === "keyup") {
             this.game.handleKeyUp && this.game.handleKeyUp(player, input.key);
+        } else if (input.type === "input") {
+            this.game.handleInput && this.game.handleInput(input, player);
+        } else if(input.type === "state") {
+            this.game.handleState && this.game.handleState(input, player);
         } else {
             console.log("Unknown input type: " + input.type);
         }

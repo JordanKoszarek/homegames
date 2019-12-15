@@ -28,6 +28,7 @@ class KozzDevGame extends Game {
 
         //Player input override. Kinda weird, but didnt want to change the way player worked in Josephs code.
         player.receiveUpdate = (update) => this.handlePlayerUpdate(update, player);
+
         this.ships[player.id] = new Ship(player.id);
 
         const connectMessage = {
@@ -48,10 +49,50 @@ class KozzDevGame extends Game {
         player.ws.send(JSON.stringify(connectMessage));
     }
 
-    handlePlayerUpdate(update, player) {
-        if (player.id === this.hostId) {
-            this.gameState = update;
+    handleInput(update, player) {
+
+        console.log(update)
+
+        if(!update.type) {
+            console.log("No type in update:" + update);
         }
+
+        if(update.type === 'input' && this.hostId) {
+
+            const host = this.players[this.hostId];
+
+            console.log('got input');
+
+            console.log(update);
+
+            host.ws.send(JSON.stringify(update));
+
+        }
+
+    }
+
+    handlePlayerUpdate(update, player) {
+        const parsedUpdate = JSON.parse(update);
+
+        console.log('player update')
+        console.log(update)
+
+        if(!parsedUpdate.type) {
+            console.log("No type in update:" + update);
+        }
+
+        if(parsedUpdate.type === 'uinput' && this.hostId) {
+
+            const host = this.players[this.hostId];
+
+            console.log('got input');
+
+            console.log(update);
+
+            host.ws.send(update);
+
+        }
+
     }
 
 
