@@ -1,0 +1,16 @@
+{
+"companyName": "KozzDev",
+"productName": "kozz-dev-homegame",
+"productVersion": "0.1",
+"dataUrl": "WebBuild.data.gz",
+"wasmCodeUrl": "WebBuild.wasm.gz",
+"wasmFrameworkUrl": "WebBuild.framework.js.gz",
+"graphicsAPI": ["WebGL 2.0","WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20",
+"cacheControl": {"default": "must-revalidate"},
+"developmentBuild": false,
+"multithreading": false,
+"unityVersion": "2020.1.0a14"
+}

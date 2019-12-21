@@ -7,7 +7,7 @@ http.createServer((req, res) => {
 
     switch(path) {
         case '/': {
-            const index = fs.readFileSync('web/index.html');
+            const index = fs.readFileSync('unity/index.html');
             contentType = 'text/html';
             payload = index;
             break;
@@ -22,6 +22,51 @@ http.createServer((req, res) => {
             const style = fs.readFileSync('web/app.css');
             contentType = 'text/css';
             payload = style;
+            break;
+        }
+        case '/TemplateData/UnityProgress.js':
+        {
+            const progress = fs.readFileSync('unity/TemplateData/UnityProgress.js');
+            contentType = 'text/javascript';
+            payload = progress;
+            break;
+        }
+        case '/Build/WebBuild.loader.js':
+        {
+            const loader = fs.readFileSync('unity/Build/WebBuild.loader.js');
+            contentType = 'text/javascript';
+            payload = loader;
+            break;
+        }
+        case '/Build/WebBuild.json':
+        {
+            const loader = fs.readFileSync('unity/Build/WebBuild.json');
+            contentType = 'text/javascript';
+            payload = loader;
+            break;
+        }
+        case '/Build/WebBuild.data.gz':
+        {
+            const loader = fs.readFileSync('unity/Build/WebBuild.data.gz');
+            contentType = 'application/javascript';
+            res.setHeader('Content-Encoding', 'gzip');
+            payload = loader;
+            break;
+        }
+        case '/Build/WebBuild.framework.js.gz':
+        {
+            const loader = fs.readFileSync('unity/Build/WebBuild.framework.js.gz');
+            contentType = 'application/javascript';
+            res.setHeader('Content-Encoding', 'gzip');
+            payload = loader;
+            break;
+        }
+        case '/Build/WebBuild.wasm.gz':
+        {
+            const loader = fs.readFileSync('unity/Build/WebBuild.wasm.gz');
+            contentType = 'application/javascript';
+            res.setHeader('Content-Encoding', 'gzip');
+            payload = loader;
             break;
         }
         default: {
