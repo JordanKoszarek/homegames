@@ -1,6 +1,6 @@
 const Game = require("./game");
-const gameNode = require("../../Common/GameNode");
-const { randomColor } = require("../../Common/Colors");
+const gameNode = require("../../common/GameNode");
+const { randomColor } = require("../../common/Colors");
 const Ship = require("./ship-node");
 const WebSocket = require("ws");
 const generateId = require("./id-generator");
