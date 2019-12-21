@@ -19,6 +19,8 @@ const WordMatch = require('./src/games/word-match');
 
 const PORT = process.env.PORT || 7080;
 
+console.log(PORT);
+
 const server = http.createServer();
 
 linkHelper();
