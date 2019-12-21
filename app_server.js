@@ -64,7 +64,7 @@ http.createServer((req, res) => {
         case '/Build/WebBuild.wasm.gz':
         {
             const loader = fs.readFileSync('unity/Build/WebBuild.wasm.gz');
-            contentType = 'application/javascript';
+            contentType = 'application/wasm';
             res.setHeader('Content-Encoding', 'gzip');
             payload = loader;
             break;
