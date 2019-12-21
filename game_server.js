@@ -17,7 +17,7 @@ const linkHelper = require("./src/common/util/link-helper");
 
 const WordMatch = require('./src/games/word-match');
 
-const PORT = 7080;
+const PORT = process.env.PORT || 7080;
 
 const server = http.createServer();
 
