@@ -50,13 +50,17 @@ class KozzDevGame extends Game {
 
         Object.values(this.players).forEach((otherPlayer) => {
 
+            if (newPlayer.id === otherPlayer.id) {
+                return;
+            }
+
             const otherPlayerMessage = JSON.stringify({
                 type: "newPlayer",
                 id: otherPlayer.id,
                 gameObjectId: otherPlayer.id
             });
 
-            newPlayer.ws.send(JSON.stringify(otherPlayerMessage));
+            newPlayer.ws.send(otherPlayerMessage);
             otherPlayer.ws.send(newPlayerMessage)
         });
 
